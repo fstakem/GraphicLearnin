@@ -14,9 +14,12 @@ def landing():
 @app.route('/graph/')
 def graph():
     view = 'graph'
-    graph = request.args.get('graph')
+    graph_type = request.args.get('graph_type')
     
-    return render_template('graph.html', view=view, graph=graph)
+    if graph_type == None:
+        graph_type = 'node'
+    
+    return render_template('graph.html', view=view, graph_type=graph_type)
 
 if __name__ == "__main__":
     app.run()

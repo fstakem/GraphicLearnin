@@ -8,26 +8,33 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">Graphic Learnin</a>
+      
+     <a class="navbar-brand" href="/">Graphic Learnin</a>
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-      	{% if view == "x" %}
-        <li class="active"><a href="/graph">Graph</a></li>
+      	{% if graph_type == "node" %}
+        <li class="active"><a href="/graph?graph_type=node">Node</a></li>
         {% else %}
-        <li><a href="/graph">Graph</a></li>
+        <li><a href="/graph?graph_type=node">Node</a></li>
         {% endif %}
         
-        {% if view == "y" %}
-        <li class="active"><a href="/graph">Graph</a></li>
+        {% if graph_type == "tree" %}
+        <li class="active"><a href="/graph?graph_type=tree">Tree</a></li>
         {% else %}
-        <li><a href="/graph">Graph</a></li>
+        <li><a href="/graph?graph_type=tree">Tree</a></li>
         {% endif %}
         
-        {% if view == "z" %}
-        <li class="active"><a href="/graph">Graph</a></li>
+        {% if graph_type == "list" %}
+        <li class="active"><a href="/graph?graph_type=list">List</a></li>
         {% else %}
-        <li><a href="/graph">Graph</a></li>
+        <li><a href="/graph?graph_type=list">List</a></li>
+        {% endif %}
+        
+        {% if graph_type == "time" %}
+        <li class="active"><a href="/graph?graph_type=time">Time</a></li>
+        {% else %}
+        <li><a href="/graph?graph_type=time">Time</a></li>
         {% endif %}
       </ul>
     </div><!--/.nav-collapse -->
