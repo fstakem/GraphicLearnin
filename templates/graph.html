@@ -2,10 +2,14 @@
 
 {% block content %}
 
+{% if graph_type == "node" %}
+	{% include "node.html"%}
+{% endif %}
+
 <div class="col-md-8">
   <div class="panel panel-default">
 	  <div class="panel-heading">
-	  	<h3 class="panel-title">Introduction</h3>
+	  	<h3 class="panel-title">Graphs</h3>
 	  </div>
 	  <div class="panel-body">
 	  	This is the graph page!
