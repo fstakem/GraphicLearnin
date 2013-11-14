@@ -4,7 +4,7 @@ from flask import request
 from flask import redirect
 
 app = Flask(__name__)
-app.debug = True
+#app.debug = True
 
 
 @app.route('/')
