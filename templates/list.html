@@ -1,0 +1,13 @@
+{% if graph_name == "List Item" %}
+  {% include "list_item.html"%}
+{% elif graph_name == "List Example 1" %}
+  {% include "list_example_1.html"%}
+{% elif graph_name == "List Example 2" %}
+  {% include "list_example_2.html"%}
+{% elif graph_name == "List Example 3" %}
+  {% include "list_example_3.html"%}
+{% else %}
+<h4>--Error: Graph Name--</h4>
+Graph type: {{ graph_type }} </br>
+Graph name: {{ graph_name }} </br>
+{% endif %}

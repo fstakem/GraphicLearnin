@@ -1,0 +1,13 @@
+{% if graph_name == "Time" %}
+  {% include "time_x_sidebar.html"%}
+{% elif graph_name == "Time Example 1" %}
+  {% include "time_example_1_sidebar.html"%}
+{% elif graph_name == "Time Example 2" %}
+  {% include "time_example_2_sidebar.html"%}
+{% elif graph_name == "Time Example 3" %}
+  {% include "time_example_3_sidebar.html"%}
+{% else %}
+<h4>--Error: Graph Name--</h4>
+Graph type: {{ graph_type }} </br>
+Graph name: {{ graph_name }} </br>
+{% endif %}

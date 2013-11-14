@@ -4,8 +4,7 @@ from flask import request
 from flask import redirect
 
 app = Flask(__name__)
-
-graph_names = {}
+app.debug = True
 
 
 @app.route('/')

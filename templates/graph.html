@@ -8,11 +8,21 @@
 	  	<h3 class="panel-title">{{ graph_name }}</h3>
 	  </div>
 	  <div class="panel-body">
+	  
 	  	{% if graph_type == "node" %}
-				{% include "node_alt_3.html"%}
-			{% elif graph_type == "tree" %}
-				{% include "tree_alt_2.html"%}
-			{% endif %}
+	  		{% include "node.html"%}
+	  	{% elif graph_type == "tree" %}
+	  		{% include "tree.html"%}
+	  	{% elif graph_type == "list" %}
+	  		{% include "list.html"%}
+	  	{% elif graph_type == "time" %}
+	  		{% include "time.html"%}
+	  	{% else %}
+	  	<h4>--Error: Graph Type--</h4>
+	  	Graph type: {{ graph_type }} </br>
+	  	Graph name: {{ graph_name }} </br>
+	  	{% endif %}
+	  
 	  </div>
 	</div>
 </div>
@@ -23,7 +33,21 @@
 	  	<h3 class="panel-title">Parameters</h3>
 	  </div>
 	  <div class="panel-body">
-	  	{% include "sidebar.html"%}
+	  
+	  	{% if graph_type == "node" %}
+	  		{% include "node_sidebar.html"%}
+	  	{% elif graph_type == "tree" %}
+	  		{% include "tree_sidebar.html"%}
+	  	{% elif graph_type == "list" %}
+	  		{% include "list_sidebar.html"%}
+	  	{% elif graph_type == "time" %}
+	  		{% include "time_sidebar.html"%}
+	  	{% else %}
+	  	<h4>--Error: Graph Type--</h4>
+	  	Graph type: {{ graph_type }} </br>
+	  	Graph name: {{ graph_name }} </br>
+	  	{% endif %}
+	  	
 	  </div>
 	</div>
 </div>
