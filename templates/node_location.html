@@ -61,13 +61,13 @@
 	var location_height = 30;
 	var location_width = 30;
 	var host_inner_radius = 0;
-	var host_outer_radius = 18;
+	var host_outer_radius = 14;
 
 	// Initial data
 	var nodes = [
-	    			{id: 0, name: "GaTech", node_type: "location", fixed: true, x: 100, y: 100},
-	    			{id: 1, name: "Host 1", node_type: "host", fixed: false, x: 200, y: 200},
-	    			{id: 2, name: "Host 2", node_type: "host", fixed:false, x: 300, y: 300}
+	    			{id: 0, name: "GaTech", node_type: "location", hosts: [], fixed: true, x: 100, y: 100},
+	    			{id: 1, name: "Host 1", node_type: "host", hosts: [], fixed: false, x: 200, y: 200},
+	    			{id: 2, name: "Host 2", node_type: "host", hosts: [], fixed:false, x: 300, y: 300}
 	  			];
 	var links = [
 	    			{source: nodes[0], target: nodes[1]},
@@ -182,16 +182,22 @@
     var node_wrapper = node.data(nodes)
     		   		   	   .enter().append("g")
       		           	   .attr("class", "node")
+      		           	   .call(drag)
       		           	   .attr('x', function(d){return d.x})
 						   .attr('y', function(d){return d.y})
-      		           	   .call(drag);
-
+      		           	   .append("g")
+      		           	   .attr("class", function(d) { return d.node_type });
+      		           	   
     node = node_wrapper.append('path')
-    				.attr("class", function(d) { return d.node_type })
-					.attr('d', function(d){return getShape(d.node_type) })
-					.attr('x', function(d){return d.x})
-					.attr('y', function(d){return d.y})
-					.call(drag);
+					.attr('d', function(d){return getShape(d.node_type) });
+
+	var xx = svg.selectAll(".location")
+				.append("text")
+				.attr("dx", 0)
+				.attr("dy", ".35em")
+				.attr("text-anchor", "middle")
+    			.text(function(d) { return d.name; });
+    
 
 	
 
