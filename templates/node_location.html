@@ -19,20 +19,29 @@
 
 	.location
 	{
-		cursor: move;
-	  	fill: red;
+		  cursor: move;
 	  	stroke: #000;
 	  	stroke-width: 1.5px;
 	}
 
-	.location.condensed
+	.location .condensed
 	{
 		cursor: move;
 	  	fill: blue;
 	  	stroke: #000;
 	  	stroke-width: 1.5px;
 	}
-
+	
+	.location .symbol
+	{
+	   fill: #ccc;
+     fill-opacity: .3;
+     stroke: black;
+     stroke-width: 1.5px;
+	   border-style: solid;
+      border-width:5px;
+	}
+	
 	.host
 	{
 		cursor: move;
@@ -106,14 +115,14 @@
                          .y(function(d) { return d.y; })
                          .interpolate("linear");
 
-	var getShape = function(type)
+	var getShape = function(data)
 	{
 		var x = 0;
 		var y = 0;
 		var h = 10;
 		var w = 10;
 		
-		if(type == 'location')
+		if(data.node_type == 'location')
 		{
 			h = location_height;
 			w = location_width;
@@ -130,7 +139,7 @@
 
 			return lineFunction(points);
 		}
-		else if (type == 'host')
+		else if (data.node_type == 'host')
 		{
         	var orbital_arc = d3.svg.arc()
 						    	.startAngle(0)
@@ -139,7 +148,7 @@
 						    	.outerRadius(host_outer_radius); 
 			return orbital_arc();
 		}
-		else if(type == "triangle")
+		else if(data.node_type == "triangle")
 		{
 			x = x - w/2;
 			y = y - h/2;
@@ -184,19 +193,23 @@
       		           	   .attr("class", "node")
       		           	   .call(drag)
       		           	   .attr('x', function(d){return d.x})
-						   .attr('y', function(d){return d.y})
+						             .attr('y', function(d){return d.y})
       		           	   .append("g")
       		           	   .attr("class", function(d) { return d.node_type });
       		           	   
-    node = node_wrapper.append('path')
-					.attr('d', function(d){return getShape(d.node_type) });
+    
 
 	var xx = svg.selectAll(".location")
 				.append("text")
+				.attr("class", "label")
 				.attr("dx", 0)
 				.attr("dy", ".35em")
 				.attr("text-anchor", "middle")
-    			.text(function(d) { return d.name; });
+    			.text(function(d) { return d.name; });	
+    			
+    node = node_wrapper.append('path')
+          .attr("class", "symbol")
+          .attr('d', function(d){return getShape(d) });
     
 
 	
@@ -225,8 +238,11 @@
 	      	.attr("y1", function(d) { return d.source.y; })
 	      	.attr("x2", function(d) { return d.target.x; })
 	      	.attr("y2", function(d) { return d.target.y; });
+	      	
+	   node_wrapper.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+	  
 
-	    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+	    //node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
 	  	//node.attr("cx", function(d) { return d.x; })
 	      	//.attr("cy", function(d) { return d.y; });
