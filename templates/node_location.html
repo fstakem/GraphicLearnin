@@ -124,6 +124,17 @@
 		
 		if(data.node_type == 'location')
 		{
+		  
+		  var bbox = svg.selectAll(".label").node().getBBox();
+		  console.log("-----BBOX w:" + bbox.width);
+
+      //var rect = svg.append("svg:rect")
+                    //.attr("x", bbox.x)
+                    //.attr("y", bbox.y)
+                    //.attr("width", bbox.width)
+                    //.attr("height", bbox.height)
+		
+		
 			h = location_height;
 			w = location_width;
 			x = -w/2;
