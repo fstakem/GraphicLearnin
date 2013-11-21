@@ -20,6 +20,7 @@
 	.location
 	{
 		  cursor: move;
+		 
 	  	stroke: #000;
 	  	stroke-width: 1.5px;
 	}
@@ -76,11 +77,16 @@
 	var nodes = [
 	    			{id: 0, name: "GaTech", node_type: "location", hosts: [], fixed: true, x: 100, y: 100},
 	    			{id: 1, name: "Host 1", node_type: "host", hosts: [], fixed: false, x: 200, y: 200},
-	    			{id: 2, name: "Host 2", node_type: "host", hosts: [], fixed:false, x: 300, y: 300}
+	    			{id: 2, name: "Host 2", node_type: "host", hosts: [], fixed:false, x: 300, y: 300},
+	    			{id: 3, name: "Lab", node_type: "location", hosts: [], fixed: true, x: 300, y: 100},
+            {id: 4, name: "Host 3", node_type: "host", hosts: [], fixed: false, x: 400, y: 200},
+            {id: 5, name: "Host 4", node_type: "host", hosts: [], fixed:false, x: 400, y: 300}
 	  			];
 	var links = [
 	    			{source: nodes[0], target: nodes[1]},
-	    			{source: nodes[0], target: nodes[2]}
+	    			{source: nodes[0], target: nodes[2]},
+	    			{source: nodes[3], target: nodes[4]},
+            {source: nodes[3], target: nodes[5]}
 	  			];
 
 	var force = d3.layout.force()
@@ -221,8 +227,18 @@
     node = node_wrapper.append('path')
           .attr("class", "symbol")
           .attr('d', function(d){return getShape(d) });
+          
+          
+    var createNodeGraphics = function(node_wrapper)
+    {
+        for (var i=0; i < node_wrapper[0].length; i++)
+        {
+            console.log(node_wrapper[0][i].__data__.name);
+        }
+    }
     
-
+    console.log(node_wrapper);
+    createNodeGraphics(node_wrapper);
 	
 
   	//node = node.data(nodes)
