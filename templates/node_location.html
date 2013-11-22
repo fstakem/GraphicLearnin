@@ -12,48 +12,41 @@
 	.node 
 	{
 	  	cursor: move;
-	  	fill: #ccc;
-	  	stroke: #000;
-	  	stroke-width: 1.5px;
 	}
 
 	.location
 	{
-		  cursor: move;
+		  
 		 
-	  	stroke: #000;
-	  	stroke-width: 1.5px;
+	  	
 	}
 
 	.location .condensed
 	{
-		cursor: move;
-	  	fill: blue;
-	  	stroke: #000;
-	  	stroke-width: 1.5px;
+		
 	}
 	
 	.location .symbol
 	{
-	   fill: #ccc;
-     fill-opacity: .3;
-     stroke: black;
-     stroke-width: 1.5px;
-	   border-style: solid;
-      border-width:5px;
+	   	fill: #ccc;
+     	stroke: black;
+     	stroke-width: 1.8px;
+	}
+
+	.location .label
+	{
+		font-family: Verdana, sans-serif;
+		font-size: 12pt;
+		font color: black;
+		font-style: normal;
+		font-weight: lighter;
 	}
 	
 	.host
 	{
-		cursor: move;
 	  	fill: blue;
 	  	stroke: #000;
 	  	stroke-width: 1.5px;
-	}
-
-	.node.fixed 
-	{
-	  	fill: #f00;
 	}
 
 </style>
@@ -64,35 +57,49 @@
 <script type="text/javascript">
 
 	// Graphic parameters
+	// --------------------------------------------------------------------------------------------------
 	var width  = 600;
 	var height = 400;
+
+	var nodes = [];
+	var links = [];
+
 	var link_distance = 40;
 	var node_charge = -500;
+
 	var location_height = 30;
-	var location_width = 30;
+	var location_width = 80;
+
 	var host_inner_radius = 0;
-	var host_outer_radius = 14;
+	var host_outer_radius = 10;
+
 
 	// Initial data
-	var nodes = [
-	    			{id: 0, name: "GaTech", node_type: "location", hosts: [], fixed: true, x: 100, y: 100},
-	    			{id: 1, name: "Host 1", node_type: "host", hosts: [], fixed: false, x: 200, y: 200},
-	    			{id: 2, name: "Host 2", node_type: "host", hosts: [], fixed:false, x: 300, y: 300},
-	    			{id: 3, name: "Lab", node_type: "location", hosts: [], fixed: true, x: 300, y: 100},
-            {id: 4, name: "Host 3", node_type: "host", hosts: [], fixed: false, x: 400, y: 200},
-            {id: 5, name: "Host 4", node_type: "host", hosts: [], fixed:false, x: 400, y: 300}
-	  			];
-	var links = [
-	    			{source: nodes[0], target: nodes[1]},
-	    			{source: nodes[0], target: nodes[2]},
-	    			{source: nodes[3], target: nodes[4]},
-            {source: nodes[3], target: nodes[5]}
-	  			];
+	// --------------------------------------------------------------------------------------------------
+	nodes = [
+    			{id: 0, name: "GaTech", node_type: "location", hosts: [], fixed: true, x: 100, y: 100},
+    			{id: 1, name: "Host 1", node_type: "host", hosts: [], fixed: false, x: 200, y: 200},
+    			{id: 2, name: "Host 2", node_type: "host", hosts: [], fixed:false, x: 300, y: 300},
+    			{id: 3, name: "Lab", node_type: "location", hosts: [], fixed: true, x: 300, y: 100},
+        		{id: 4, name: "Host 3", node_type: "host", hosts: [], fixed: false, x: 400, y: 200},
+        		{id: 5, name: "Host 4", node_type: "host", hosts: [], fixed:false, x: 400, y: 300}
+	  		];
+	links = [
+    			{source: nodes[0], target: nodes[1]},
+    			{source: nodes[0], target: nodes[2]},
+    			{source: nodes[3], target: nodes[4]},
+        		{source: nodes[3], target: nodes[5]}
+	  		];
 
+
+	// D3 and svg setup
+	// --------------------------------------------------------------------------------------------------
 	var force = d3.layout.force()
 	    		  .size([width, height])
-	    		  .charge(-400)
-	    		  .linkDistance(40)
+	    		  .nodes(nodes)
+	     		  .links(links)
+	    		  .charge(node_charge)
+	    		  .linkDistance(link_distance)
 	    		  .on("tick", tick);
 
 	var drag = force.drag()
@@ -103,210 +110,172 @@
 	  			.attr('width', width)
 	  			.attr('height', height);
 
-	var link = svg.selectAll(".link");
-	var node = svg.selectAll(".node");
+	var link_element = svg.selectAll(".link");
+	var node_element = svg.selectAll(".node")
 
-	force.nodes(nodes)
+	/*
+  	var link = svg.selectAll(".link").data(links)
+    		   	  					 .enter().append("line")
+      		   						 .attr("class", "link");
+
+    var node = svg.selectAll(".node").data(nodes)
+				    		   		 .enter().append("g")
+				      		         .attr("class", "node")
+				      		         .call(drag)
+				      		         .attr('x', function(d){return d.x})
+									 .attr('y', function(d){return d.y})
+				      		         .append("g")
+				      		         .attr("class", function(d) { return d.node_type });
+				*/
+
+    force.nodes(nodes)
 	     .links(links)
 	     .start();
+    
 
-	// Events
-	//var drag = d3.behavior.drag()
-	//		.origin(Object)
-	//		.on("drag", move);
+	// Simulation functions
+	// --------------------------------------------------------------------------------------------------
+    function tick()
+	{
+		link_element.attr("x1", function(d) { return d.source.x; })
+	      			.attr("y1", function(d) { return d.source.y; })
+	      			.attr("x2", function(d) { return d.target.x; })
+	      			.attr("y2", function(d) { return d.target.y; });
+	      	
+	   node_element.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+	}
 
-	// Functions for node and links
-	var lineFunction = d3.svg.line()
+	function update()
+	{
+		console.log("Updating the data and UI.");
+
+		// Data join
+		link_element = link_element.data(links);
+		node_element = node_element.data(nodes);
+
+		// Update
+		// ?
+
+		// Enter
+		link_element.enter().append("line")
+      		   				.attr("class", "link");
+		node_element.enter().append("g")
+				      		.attr("class", "node")
+				      		.call(drag)
+				      		.attr('x', function(d){return d.x})
+							.attr('y', function(d){return d.y})
+				      		.append("g")
+				      		.attr("class", function(d) { return d.node_type });
+
+		createLocations();
+    	createHosts();
+
+		// Enter + update
+		// ?
+
+		// Exit
+		link_element.exit().remove();
+		node_element.exit().remove();
+
+		// Run simulation
+		force.start()
+	}
+
+
+	// Graphic helper functions  	
+	// --------------------------------------------------------------------------------------------------	           	   
+    var createLine = d3.svg.line()
                          .x(function(d) { return d.x; })
                          .y(function(d) { return d.y; })
                          .interpolate("linear");
 
-	var getShape = function(data)
-	{
-		var x = 0;
-		var y = 0;
-		var h = 10;
-		var w = 10;
-		
-		if(data.node_type == 'location')
-		{
-		  
-		  var bbox = svg.selectAll(".label").node().getBBox();
-		  console.log("-----BBOX w:" + bbox.width);
+    var createCircle = d3.svg.arc()
+							 .startAngle(0)
+							 .endAngle(6.28318531)
+							 .innerRadius(host_inner_radius)
+							 .outerRadius(host_outer_radius);
+     
 
-      //var rect = svg.append("svg:rect")
-                    //.attr("x", bbox.x)
-                    //.attr("y", bbox.y)
-                    //.attr("width", bbox.width)
-                    //.attr("height", bbox.height)
-		
-		
-			h = location_height;
-			w = location_width;
-			x = -w/2;
-			y = -h/2;
-
-			var points = [ 
-					   		{"x": x, "y": y},
-					   		{"x": x + w, "y": y},
-					   		{"x": x + w, "y": y + h},
-					   		{"x": x, "y": y + h}, 
-					   		{"x": x, "y": y} 
-					 	 ];
-
-			return lineFunction(points);
-		}
-		else if (data.node_type == 'host')
-		{
-        	var orbital_arc = d3.svg.arc()
-						    	.startAngle(0)
-						    	.endAngle(6.28318531)
-						    	.innerRadius(host_inner_radius)
-						    	.outerRadius(host_outer_radius); 
-			return orbital_arc();
-		}
-		else if(data.node_type == "triangle")
-		{
-			x = x - w/2;
-			y = y - h/2;
-
-			var points = [ 
-					   		{"x": x + w/2, "y": y},
-					   		{"x": x + w, "y": y + h},
-					   		{"x": x, "y": y + h},
-					   		{"x": x + w/2, "y": y} 
-					 	 ];
-
-			return lineFunction(points)
-		}
-		else
-		{
-			x = x - w/2;
-			y = y - h/2;
-
-			var points = [ 
-					   		{"x": x, "y": y},
-					   		{"x": x + w, "y": y},
-					   		{"x": x + w, "y": y + h},
-					   		{"x": x, "y": y + h}, 
-					   		{"x": x, "y": y} 
-					 	 ];
-
-			return lineFunction(points)
-		}
-    	
-    	return lineFunction(points)
-	}
-	
-
-	
-
-  	link = link.data(links)
-    		   .enter().append("line")
-      		   .attr("class", "link");
-
-    var node_wrapper = node.data(nodes)
-    		   		   	   .enter().append("g")
-      		           	   .attr("class", "node")
-      		           	   .call(drag)
-      		           	   .attr('x', function(d){return d.x})
-						             .attr('y', function(d){return d.y})
-      		           	   .append("g")
-      		           	   .attr("class", function(d) { return d.node_type });
-      		           	   
-    
-
-	var xx = svg.selectAll(".location")
-				.append("text")
-				.attr("class", "label")
-				.attr("dx", 0)
-				.attr("dy", ".35em")
-				.attr("text-anchor", "middle")
-    			.text(function(d) { return d.name; });	
-    			
-    node = node_wrapper.append('path')
-          .attr("class", "symbol")
-          .attr('d', function(d){return getShape(d) });
-          
-          
-    var createNodeGraphics = function(node_wrapper)
+    // Graphic functions for svg elements     
+    // --------------------------------------------------------------------------------------------------   
+    function createLocations()
     {
-        for (var i=0; i < node_wrapper[0].length; i++)
-        {
-            console.log(node_wrapper[0][i].__data__.name);
-        }
+    	console.log("Creating locations.");
+
+		var location = svg.selectAll(".location");
+
+		location.on("dblclick", function(d) { toggleHosts(d); });
+    	
+    	var symbol = location.append('path')
+	          					  .attr("class", "symbol")
+	          					  .attr('d', 
+	          					  		function(d)
+	          					  		{
+	          					  			h = location_height;
+											w = location_width;
+											x = -w/2;
+											y = -h/2;
+
+											var points = [ 
+													   		{"x": x, "y": y},
+													   		{"x": x + w, "y": y},
+													   		{"x": x + w, "y": y + h},
+													   		{"x": x, "y": y + h}, 
+													   		{"x": x, "y": y} 
+													 	 ];
+
+											return createLine(points); 
+	          					  		}
+          					  	   );
+
+	    var text = location.append("text")
+								  .attr("class", "label")
+								  .attr("dx", 0)
+								  .attr("dy", ".25em")
+								  .attr("text-anchor", "middle")
+    							  .text(
+    							  	function(d) 
+    							  	{
+    							  		return d.name; 
+    							  	}
+    							  );
     }
-    
-    console.log(node_wrapper);
-    createNodeGraphics(node_wrapper);
-	
 
-  	//node = node.data(nodes)
-    //		   .enter().append("circle")
-    //  		   .attr("class", function(d) { return d.type })
-    //  		   .attr("r", 12)
-    //  		   .call(drag);
+    function createHosts()
+    {
+    	console.log("Creating hosts.");
 
-    
-    console.log("---------------------------------------");
-    
+    	svg.selectAll(".host").append('path')
+          		  			  .attr("class", "symbol")
+          		  			  .attr('d', 
+          		  				function(d)
+          		  				{
+									return createCircle(); 
+          		  				}
+          		  			  );
+    }
 
-    //console.log ( node );
 
-    //var location = svg.selectAll(".location");
-    //var host = svg.selectAll(".host");
+    // UI events
+    // --------------------------------------------------------------------------------------------------
+    function toggleHosts(d)
+    {
+    	console.log("Click bro: toggle");
+    }
 
-    //console.log ( location );
-
-	// Functions for updating the interface
-	function tick()
-	{
-		link.attr("x1", function(d) { return d.source.x; })
-	      	.attr("y1", function(d) { return d.source.y; })
-	      	.attr("x2", function(d) { return d.target.x; })
-	      	.attr("y2", function(d) { return d.target.y; });
-	      	
-	   node_wrapper.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-	  
-
-	    //node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-
-	  	//node.attr("cx", function(d) { return d.x; })
-	      	//.attr("cy", function(d) { return d.y; });
-
-	    //location.attr("cx", function(d) { return d.x; })
-	      	//.attr("cy", function(d) { return d.y; });
-
-	}
-
-	function update() 
-	{
-		path = path.data(links);
-	}
-
-	// User interaction functions
-	function dragstart(d) 
+    function dragstart(d) 
 	{
 	  	//d.fixed = true;
 	  	//d3.select(this).classed("fixed", true);
 	}
 
-	function move()
-	{
-		/*
-		var dragTarget = d3.select(this);
+	
+    // Main
+	// --------------------------------------------------------------------------------------------------
+    $(document).ready(function () 
+    {
+		update();
+	});
 
-		console.log("d3.event.x:"+d3.event.x+" d3.event.y:"+d3.event.y);
-		console.log(dragTarget)
-		console.log("target.x:"+dragTarget.attr('x')+" target.y:"+dragTarget.attr('y'));
-
-		var x = d3.event.x - parseInt(dragTarget.attr('x'));
-		var y = d3.event.y - parseInt(dragTarget.attr("y"));
-
-		dragTarget
-			.attr("transform", "translate(" + x + "," + y + ")")
-			*/
-	}
-
-
+	
 </script>
