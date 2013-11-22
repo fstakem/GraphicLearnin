@@ -17,8 +17,6 @@
 	.location
 	{
 		  
-		 
-	  	
 	}
 
 	.location .condensed
@@ -51,7 +49,6 @@
 
 </style>
 
-<script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="/static/js/sprintf.js"></script>
 
 <script type="text/javascript">
@@ -113,24 +110,8 @@
 	var link_element = svg.selectAll(".link");
 	var node_element = svg.selectAll(".node")
 
-	/*
-  	var link = svg.selectAll(".link").data(links)
-    		   	  					 .enter().append("line")
-      		   						 .attr("class", "link");
-
-    var node = svg.selectAll(".node").data(nodes)
-				    		   		 .enter().append("g")
-				      		         .attr("class", "node")
-				      		         .call(drag)
-				      		         .attr('x', function(d){return d.x})
-									 .attr('y', function(d){return d.y})
-				      		         .append("g")
-				      		         .attr("class", function(d) { return d.node_type });
-				*/
-
     force.nodes(nodes)
-	     .links(links)
-	     .start();
+	     .links(links);
     
 
 	// Simulation functions
