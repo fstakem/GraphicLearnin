@@ -9,6 +9,12 @@
 	  	stroke-width: 2.0px;
 	}
 
+	.link .symbol
+	{
+		stroke: #000;
+	  	stroke-width: 2.0px;
+	}
+
 	.node 
 	{
 	  	cursor: move;
@@ -31,6 +37,13 @@
      	stroke-width: 1.8px;
 	}
 
+	.location .condensed-symbol
+	{
+	   	fill: red;
+     	stroke: black;
+     	stroke-width: 1.8px;
+	}
+
 	.location .label
 	{
 		font-family: Verdana, sans-serif;
@@ -40,11 +53,21 @@
 		font-weight: lighter;
 	}
 	
-	.host
+	.host .symbol
 	{
 	  	fill: blue;
 	  	stroke: #000;
 	  	stroke-width: 1.5px;
+	}
+
+	.host .label
+	{
+		stroke: white;
+		font-family: Verdana, sans-serif;
+		font-size: 8pt;
+		font color: white;
+		font-style: normal;
+		font-weight: lighter;
 	}
 
 </style>
@@ -74,12 +97,12 @@
 	// Initial data
 	// --------------------------------------------------------------------------------------------------
 	nodes = [
-    			{id: 0, name: "GaTech", node_type: "location", hosts: [], fixed: true, x: 100, y: 100},
-    			{id: 1, name: "Host 1", node_type: "host", hosts: [], fixed: false, x: 200, y: 200},
-    			{id: 2, name: "Host 2", node_type: "host", hosts: [], fixed:false, x: 300, y: 300},
-    			{id: 3, name: "Lab", node_type: "location", hosts: [], fixed: true, x: 300, y: 100},
-        		{id: 4, name: "Host 3", node_type: "host", hosts: [], fixed: false, x: 400, y: 200},
-        		{id: 5, name: "Host 4", node_type: "host", hosts: [], fixed:false, x: 400, y: 300}
+    			{id: 0, name: "GaTech", short_name: "", node_type: "location", open: true, fixed: true, x: 100, y: 100},
+    			{id: 1, name: "Host 1", short_name: "", node_type: "host", open: true, fixed: false, x: 200, y: 200},
+    			{id: 2, name: "Host 2", short_name: "", node_type: "host", open: true, fixed:false, x: 300, y: 300},
+    			{id: 3, name: "Lab", short_name: "", node_type: "location", open: true, fixed: true, x: 300, y: 100},
+        		{id: 4, name: "Host 3", short_name: "", node_type: "host", open: true, fixed: false, x: 400, y: 200},
+        		{id: 5, name: "Host 4", short_name: "", node_type: "host", open: true, fixed:false, x: 400, y: 300}
 	  		];
 	links = [
     			{source: nodes[0], target: nodes[1]},
@@ -122,7 +145,7 @@
 	      			.attr("y1", function(d) { return d.source.y; })
 	      			.attr("x2", function(d) { return d.target.x; })
 	      			.attr("y2", function(d) { return d.target.y; });
-	      	
+	      			     	
 	   node_element.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 	}
 
@@ -140,6 +163,7 @@
 		// Enter
 		link_element.enter().append("line")
       		   				.attr("class", "link");
+      		   				
 		node_element.enter().append("g")
 				      		.attr("class", "node")
 				      		.call(drag)
@@ -209,7 +233,7 @@
 	          					  		}
           					  	   );
 
-	    var text = location.append("text")
+	    var label = location.append("text")
 								  .attr("class", "label")
 								  .attr("dx", 0)
 								  .attr("dy", ".25em")
@@ -226,7 +250,9 @@
     {
     	console.log("Creating hosts.");
 
-    	svg.selectAll(".host").append('path')
+    	var host = svg.selectAll(".host");
+
+    	var symbol = host.append('path')
           		  			  .attr("class", "symbol")
           		  			  .attr('d', 
           		  				function(d)
@@ -234,6 +260,21 @@
 									return createCircle(); 
           		  				}
           		  			  );
+
+        var label = host.append("text")
+								  .attr("class", "label")
+								  .attr("dx", 0)
+								  .attr("dy", ".25em")
+								  .attr("text-anchor", "middle")
+    							  .text(
+    							  	function(d) 
+    							  	{
+    							  		return d.id; 
+    							  	}
+    							  );
+
+        var title = host.append('svg:title')
+        				.text(function(d) { return d.name; });
     }
 
 
