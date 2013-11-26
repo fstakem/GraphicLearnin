@@ -1,0 +1,42 @@
+{
+    "name": "Web Server",
+    "children": 
+    [ 
+        {
+            "name": "Production",
+            "children": 
+            [ 
+                {
+                    "name": "1.0.0",
+                    "children": 
+                    [
+                        {
+                            "name": "1.0.2", 
+                            "children": 
+                            [
+                                {
+                                    "name": "1.1.0", 
+                                    "size": 3938
+                                }
+                            ] 
+                        }
+                    ] 
+                }
+            ]
+        },
+        {
+            "name": "Test",
+            "children": 
+            [ 
+                {
+                    "name": "1.0.0",
+                    "children": 
+                    [
+                        {"name": "1.0.1", "size": 3938},
+                        {"name": "1.0.2", "size": 3812}
+                    ] 
+                }
+            ]
+        }
+    ]
+}
