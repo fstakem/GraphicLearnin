@@ -17,6 +17,8 @@
 	  		{% include "list.html"%}
 	  	{% elif graph_type == "time" %}
 	  		{% include "time.html"%}
+	  	{% elif graph_type == "event" %}
+	  		{% include "event.html"%}
 	  	{% else %}
 	  	<h4>--Error: Graph Type--</h4>
 	  	Graph type: {{ graph_type }} </br>
@@ -42,6 +44,8 @@
 	  		{% include "list_sidebar.html"%}
 	  	{% elif graph_type == "time" %}
 	  		{% include "time_sidebar.html"%}
+	  	{% elif graph_type == "event" %}
+	  		{% include "event_sidebar.html"%}
 	  	{% else %}
 	  	<h4>--Error: Graph Type--</h4>
 	  	Graph type: {{ graph_type }} </br>

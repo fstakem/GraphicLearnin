@@ -1,0 +1,11 @@
+{% if graph_name == "Event Example 1" %}
+	{% include "event_example_1.html"%}
+{% elif graph_name == "Event Example 2" %}
+	{% include "event_example_2.html"%}
+{% elif graph_name == "Event Example 3" %}
+	{% include "event_example_3.html"%}
+{% else %}
+<h4>--Error: Graph Name--</h4>
+Graph type: {{ graph_type }} </br>
+Graph name: {{ graph_name }} </br>
+{% endif %}

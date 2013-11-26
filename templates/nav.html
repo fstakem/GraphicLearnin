@@ -30,6 +30,7 @@
             <li><a href="/graph?graph_type=node&graph_name=Node Example 5">Example 5</a></li>
             <li><a href="/graph?graph_type=node&graph_name=Node Example 6">Example 6</a></li>
             <li><a href="/graph?graph_type=node&graph_name=Node Example 7">Example 7</a></li>
+            <li><a href="/graph?graph_type=node&graph_name=Node Example 8">Example 8</a></li>
           </ul>
          </li>
          
@@ -76,6 +77,19 @@
             <li><a href="/graph?graph_type=time&graph_name=Time Example 2">Example 2</a></li>
             <li><a href="/graph?graph_type=time&graph_name=Time Example 3">Example 3</a></li>
             <li><a href="/graph?graph_type=time&graph_name=Time Example 4">Example 4</a></li>
+          </ul>
+         </li>
+
+        {% if graph_type == "events" %}
+        <li class="dropdown active">
+        {% else %}
+        <li class="dropdown">
+        {% endif %}
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Events <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="/graph?graph_type=event&graph_name=Event Example 1">Example 1</a></li>
+            <li><a href="/graph?graph_type=event&graph_name=Event Example 2">Example 2</a></li>
+            <li><a href="/graph?graph_type=event&graph_name=Event Example 3">Example 3</a></li>
           </ul>
          </li>
         
