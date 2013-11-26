@@ -4,29 +4,45 @@
 
 	.node 
 	{
-	  cursor: pointer;
+	   cursor: pointer;
 	}
 
 	.node circle 
 	{
-	  fill: #fff;
-	  stroke: steelblue;
-	  stroke-width: 1.5px;
+	   fill: #fff;
+	   stroke: steelblue;
+	   stroke-width: 1.5px;
 	}
 
 	.node text 
 	{
-	  font: 10px sans-serif;
+	   font: 10px sans-serif;
 	}
 
 	.link 
 	{
-	  fill: none;
-	  stroke: #ccc;
-	  stroke-width: 1.5px;
+	   fill: none;
+	   stroke: #ccc;
+	   stroke-width: 1.5px;
 	}
 
+    #context-menu
+    {
+        position: absolute;
+        display: none;
+    }
+
 </style>
+
+<div id="context-menu" class="dropdown clearfix">
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+        <li><a tabindex="-1" href="#">Action</a></li>
+        <li><a tabindex="-1" href="#">Another action</a></li>
+        <li><a tabindex="-1" href="#">Something else here</a></li>
+        <li class="divider"></li>
+        <li><a tabindex="-1" href="#">Separated link</a></li>
+    </ul>
+</div>
 
 <script>
 
@@ -40,15 +56,13 @@
 	var duration = 750;
 	var root;
 
-    var zoom = d3.behavior.zoom()
-        .scaleExtent([1, 10])
-        .on("zoom", zoomed);
+    var $context_menu = $("#context-menu");
 
-    var drag = d3.behavior.drag()
-        .origin(function(d) { return d; })
-        .on("dragstart", dragstarted)
-        .on("drag", dragged)
-        .on("dragend", dragended);
+    var zoom = d3.behavior.zoom()
+                          .scaleExtent([1, 10])
+                          .on("zoom", onPanZoom)
+                          .on("zoomstart", onPanZoomStart)
+                          .on("zoomend", onPanZoomEnd);
 
 	var tree = d3.layout.tree()
     					.size([height, width]);
@@ -61,7 +75,8 @@
 	    						 .attr("height", height + margin.top + margin.bottom)
 	  							 .append("g")
 	  							 .attr("transform", "translate(" + margin.left + "," + margin.right + ")")
-                                 .call(zoom);
+                                 .call(zoom)
+                                 .on("dblclick.zoom", null);
 
     var rect = svg.append("rect")
         .attr("width", width)
@@ -87,7 +102,7 @@
 		    }
 		}
 
-		root.children.forEach(collapse);
+		//root.children.forEach(collapse);
 		update(root);
 	});
 
@@ -111,7 +126,10 @@
         var nodeEnter = node.enter().append("g")
                                     .attr("class", "node")
                                     .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-                                    .on("click", click);
+                                    .on("click", click)
+                                    .on("mouseover", mouseOverNode)
+                                    .on("mouseout", mouseOutNode)
+                                    .on("contextmenu", onRightClickNode );
 
         nodeEnter.append("circle")
                  .attr("r", 1e-6)
@@ -184,31 +202,43 @@
         });
     }
 
-    function zoomed() 
+    function onPanZoom() 
     {
-        console.log("--zoomed--");
         container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
     }
 
-    function dragstarted(d) 
+    function onPanZoomStart()
     {
-        console.log("--dragstarted--");
-        d3.event.sourceEvent.stopPropagation();
-        d3.select(this).classed("dragging", true);
+       
     }
 
-    function dragged(d) 
+    function onPanZoomEnd()
     {
-        console.log("--dragged--");
-        d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+        
     }
 
-    function dragended(d) 
+    function mouseOverNode()
     {
-        console.log("--dragended--");
-        d3.select(this).classed("dragging", false);
+        var n = d3.select(this).name;
+        console.log("In");
     }
 
+    function mouseOutNode()
+    {
+        console.log("Out");
+    }
+
+    function onRightClickNode(data, index)
+    {
+        d3.event.preventDefault();
+        $context_menu.css(
+        {
+            display: "block",
+            left: d3.event.layerX-10,
+            top: d3.event.layerY-30
+        });
+    }
+    
 	// Toggle children on click.
 	function click(d) 
 	{
@@ -225,5 +255,19 @@
 
 	  update(d);
 	}
+
+    $(function() 
+    {
+
+        $(document).click(function () 
+        {
+            $context_menu.hide();
+        });
+
+        $context_menu.on("click", "a", function() 
+        {
+             $context_menu.hide();
+        });
+    });
 
 </script>
