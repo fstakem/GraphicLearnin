@@ -219,13 +219,27 @@
 
     function mouseOverNode()
     {
-        var n = d3.select(this).name;
-        console.log("In");
+        var translate_str = d3.select(this)[0][0].getAttribute("transform").replace("translate", "")
+        var translate_values = translate_str.split(",")
+        
+        var node_name = d3.select("#node-name")[0][0];
+        var node_x = d3.select("#node-x-position")[0][0];
+        var node_y = d3.select("#node-y-position")[0][0];
+
+        node_name.setAttribute("value", d3.select(this).select('text')[0][0].textContent);
+        node_x.setAttribute("value", translate_values[0].slice(1));
+        node_y.setAttribute("value", translate_values[1].slice(0, -1));
     }
 
     function mouseOutNode()
     {
-        console.log("Out");
+        var node_name = d3.select("#node-name")[0][0];
+        var node_x = d3.select("#node-x-position")[0][0];
+        var node_y = d3.select("#node-y-position")[0][0];
+
+        node_name.setAttribute("value","");
+        node_x.setAttribute("value","");
+        node_y.setAttribute("value","");
     }
 
     function onRightClickNode(data, index)
